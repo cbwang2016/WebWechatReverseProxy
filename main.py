@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 import coloredlogs
 import itchat
-from flask import Flask, Response, request
+from flask import Flask, Response, request, redirect
 from itchat.content import *
 
 coloredlogs.install()
@@ -187,11 +187,14 @@ def show_index():
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def show_subpath(subpath):
     # show the subpath after /path/
-    if 'webwxstatreport' in subpath:  # block stat report
+    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxstatreport'):  # block stat report
         return ''
-    if 'webwxlogout' in subpath:  # block logout
-        logging.warn('Warning: logout detected!')
+    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxlogout'):  # block logout
+        logging.warning('Warning: logout detected!')
         return ''
+    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxcheckurl'):
+        url = request.args['requrl']
+        return redirect(url)
 
     data = request.data
 
@@ -253,7 +256,8 @@ def show_subpath(subpath):
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser(description="wx.qq.com reverse proxy.")
+    parser = argparse.ArgumentParser(description="wx.qq.com reverse proxy.",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-a", "--address", type=str, help="the address of this web server", default="127.0.0.1:5000")
     parser.add_argument("-p", "--port", type=int, help="listening port", default=5000)
     parser.add_argument("-o", "--host", type=str, help="listening host", default="127.0.0.1")
@@ -272,11 +276,5 @@ if __name__ == '__main__':
     itchat.auto_login(hotReload=True, enableCmdQR=args.q)
     itchat.run(blockThread=False)
     logging.info('itchat started!')
-
-    # import threading
-    #
-    # ScheduleThread = threading.Thread(target=start_schedule)
-    # ScheduleThread.setDaemon(True)
-    # ScheduleThread.start()
 
     app.run(debug=args.debug, host=args.host, port=args.port)
