@@ -24,13 +24,14 @@ wx.qq.com reverse proxy.
 optional arguments:
   -h, --help            show this help message and exit
   -a ADDRESS, --address ADDRESS
-                        the address of this web server
-  -p PORT, --port PORT  listening port
-  -o HOST, --host HOST  listening host
-  -s, --https           whether this web server uses https
-  -d, --debug           use flask debug
+                        the address of this web server (default:
+                        127.0.0.1:5000)
+  -p PORT, --port PORT  listening port (default: 5000)
+  -o HOST, --host HOST  listening host (default: 127.0.0.1)
+  -s, --https           whether this web server uses https (default: False)
+  -d, --debug           use flask debug (default: False)
   -q {0,1,2}            show qrcode in command line; integers can be used to
-                        fit strange char length
+                        fit strange char length (default: 2)
 
 ```
 
