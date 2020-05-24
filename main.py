@@ -277,7 +277,7 @@ if __name__ == '__main__':
     if not os.path.exists(rev_tmp_dir):
         os.mkdir(rev_tmp_dir)
 
-    itchat.auto_login(hotReload=True, enableCmdQR=args.q)
+    itchat.auto_login(hotReload=True, enableCmdQR=args.q, exitCallback=lambda: os.kill(os.getpid(), signal.SIGINT))
     itchat.run(blockThread=False)
     logging.info('itchat started!')
 
