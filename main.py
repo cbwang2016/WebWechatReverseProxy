@@ -66,10 +66,14 @@ def handler_receive_msg(msg):
             logging.warning(str(msg))
     # 否则是个人好友消息
     else:
-        if itchat.search_friends(userName=msg['FromUserName'])['RemarkName']:  # 优先使用备注名称
-            msg_from = itchat.search_friends(userName=msg['FromUserName'])['RemarkName']
-        else:
-            msg_from = itchat.search_friends(userName=msg['FromUserName'])['NickName']  # 在好友列表中查询发送信息的好友昵称
+        try:
+            if itchat.search_friends(userName=msg['FromUserName'])['RemarkName']:  # 优先使用备注名称
+                msg_from = itchat.search_friends(userName=msg['FromUserName'])['RemarkName']
+            else:
+                msg_from = itchat.search_friends(userName=msg['FromUserName'])['NickName']  # 在好友列表中查询发送信息的好友昵称
+        except TypeError:
+            logging.warning(str(msg))
+            msg_from = "failed to get nick name"
 
     if msg['Type'] in ('Text', 'Friends'):
         msg_content = msg['Text']
