@@ -191,10 +191,12 @@ def show_index():
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def show_subpath(subpath):
     # show the subpath after /path/
-    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxstatreport'):  # block stat report
+    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxstatusnotify') and args.block_status_notify:  # block stat report
         return ''
     if subpath.startswith('cgi-bin/mmwebwx-bin/webwxlogout'):  # block logout
         logging.warning('Warning: logout detected!')
+        return ''
+    if subpath.startswith('cgi-bin/mmwebwx-bin/webwxstatreport'):  # block stat report
         return ''
     if subpath.startswith('cgi-bin/mmwebwx-bin/webwxcheckurl'):
         url = request.args['requrl']
@@ -270,6 +272,9 @@ if __name__ == '__main__':
     parser.add_argument("-q", type=int, choices=[0, 1, 2],
                         help="show qrcode in command line; integers can be used to fit strange char length",
                         default=2)
+    parser.add_argument('-n', '--block-status-notify', action="store_true",
+                        help="block /cgi-bin/mmwebwx-bin/webwxstatusnotify")
+
     args = parser.parse_args()
     LOCAL_URL = args.address
 

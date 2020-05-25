@@ -18,6 +18,7 @@ pip install -r requirements.txt
 ```
 >python main.py -h
 usage: main.py [-h] [-a ADDRESS] [-p PORT] [-o HOST] [-s] [-d] [-q {0,1,2}]
+               [-n]
 
 wx.qq.com reverse proxy.
 
@@ -32,7 +33,9 @@ optional arguments:
   -d, --debug           use flask debug (default: False)
   -q {0,1,2}            show qrcode in command line; integers can be used to
                         fit strange char length (default: 2)
-
+  -n, --block-status-notify
+                        block /cgi-bin/mmwebwx-bin/webwxstatusnotify (default:
+                        False)
 ```
 
 ## Disclaimer
